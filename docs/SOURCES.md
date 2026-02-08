@@ -2,6 +2,30 @@
 
 本文档列出所有资源的原始下载链接和来源。
 
+## Docker 软件
+
+### macOS
+- **Docker Desktop**: https://www.docker.com/products/docker-desktop/
+- **下载链接**: https://desktop.docker.com/mac/main/arm64/Docker.dmg (Apple Silicon)
+- **下载链接**: https://desktop.docker.com/mac/main/amd64/Docker.dmg (Intel)
+- **Homebrew**: `brew install --cask docker`
+
+### Linux
+- **官方安装脚本**:
+  ```bash
+  curl -fsSL https://get.docker.com -o get-docker.sh
+  sh get-docker.sh
+  ```
+- **手动安装**:
+  - Ubuntu/Debian: https://docs.docker.com/engine/install/ubuntu/
+  - CentOS/RHEL: https://docs.docker.com/engine/install/centos/
+  - Fedora: https://docs.docker.com/engine/install/fedora/
+
+### Windows
+- **Docker Desktop**: https://www.docker.com/products/docker-desktop/
+- **下载链接**: https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
+- **说明**: Windows 10/11 64位专业版或企业版
+
 ## FFmpeg
 
 ### macOS
@@ -98,3 +122,4 @@ https://github.com/indygreg/python-build-standalone/releases/download/20240107/c
 - **Sherpa-ONNX**: https://github.com/k2-fsa/sherpa-onnx
 - **SenseVoice**: https://github.com/FunAudioLLM/SenseVoice
 - **FFmpeg**: https://ffmpeg.org/
+- **Docker**: https://www.docker.com/

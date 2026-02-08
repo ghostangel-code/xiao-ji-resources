@@ -26,6 +26,34 @@
 - **下载链接**: https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
 - **说明**: Windows 10/11 64位专业版或企业版
 
+## PortAudio
+
+### 说明
+PortAudio 是一个跨平台的音频 I/O 库，官方只提供源码，没有预编译二进制文件。
+
+### 各平台获取方式
+
+#### macOS
+- **Homebrew**: `brew install portaudio`
+- **MacPorts**: `sudo port install portaudio`
+- **源码**: http://www.portaudio.com/download.html
+
+#### Linux
+- **Ubuntu/Debian**: `sudo apt-get install libportaudio2`
+- **Fedora**: `sudo dnf install portaudio`
+- **Arch**: `sudo pacman -S portaudio`
+- **源码**: http://www.portaudio.com/download.html
+
+#### Windows
+- **Python sounddevice**: `pip install sounddevice` (自动捆绑 PortAudio)
+- ** Christoph Gohlke 二进制**: https://www.lfd.uci.edu/~gohlke/pythonlibs/#sounddevice
+- **源码编译**: http://www.portaudio.com/download.html
+
+### 相关项目
+- **官网**: http://www.portaudio.com/
+- **GitHub**: https://github.com/PortAudio/portaudio
+- **Python 绑定 (sounddevice)**: https://python-sounddevice.readthedocs.io/
+
 ## FFmpeg
 
 ### macOS
@@ -123,3 +151,4 @@ https://github.com/indygreg/python-build-standalone/releases/download/20240107/c
 - **SenseVoice**: https://github.com/FunAudioLLM/SenseVoice
 - **FFmpeg**: https://ffmpeg.org/
 - **Docker**: https://www.docker.com/
+- **PortAudio**: http://www.portaudio.com/

@@ -21,6 +21,22 @@ jobs:
         run: |
           pip install requests tqdm
 
+      - name: Download Docker
+        run: |
+          mkdir -p docker/macos docker/linux docker/windows
+          
+          # macOS Docker Desktop - Apple Silicon
+          curl -L -o docker/macos/Docker-AppleSilicon.dmg "https://desktop.docker.com/mac/main/arm64/Docker.dmg"
+          
+          # macOS Docker Desktop - Intel
+          curl -L -o docker/macos/Docker-Intel.dmg "https://desktop.docker.com/mac/main/amd64/Docker.dmg"
+          
+          # Linux Docker Install Script
+          curl -L -o docker/linux/install-docker.sh "https://get.docker.com"
+          
+          # Windows Docker Desktop
+          curl -L -o docker/windows/Docker-Desktop-Installer.exe "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe"
+
       - name: Download FFmpeg
         run: |
           mkdir -p ffmpeg/macos ffmpeg/linux ffmpeg/windows
@@ -91,6 +107,7 @@ jobs:
             自动镜像的资源文件
             
             ## 包含资源
+            - Docker (macOS, Linux, Windows)
             - FFmpeg (macOS, Linux, Windows)
             - 语音模型 (STT, TTS, VAD, KWS, Speaker)
             - 嵌入式 Python 环境
@@ -98,6 +115,7 @@ jobs:
             ## 原始来源
             详见 [SOURCES.md](SOURCES.md)
           files: |
+            docker/**/*
             ffmpeg/**/*
             models/**/*
             python/**/*

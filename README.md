@@ -22,6 +22,9 @@ xiao-ji-resources/
 │   ├── linux-arm64/
 │   ├── linux-x64/
 │   └── windows-x64/
+├── docker/                 # Docker 配置
+│   ├── chroma/            # Chroma 向量数据库
+│   └── xiaoji/            # XiaoJi 应用镜像
 └── docs/                   # 资源来源和许可证信息
     ├── SOURCES.md
     └── LICENSES.md
@@ -79,6 +82,47 @@ xiao-ji-resources/
 | Linux | x64 | 3.10.13 | indygreg/python-build-standalone |
 | Windows | x64 | 3.10.13 | indygreg/python-build-standalone |
 
+### 4. Docker 镜像
+
+#### Chroma 向量数据库
+- **镜像**: `chromadb/chroma:latest`
+- **用途**: 长期记忆存储
+- **端口**: 8000
+- **验证**: ✅ 已验证可下载
+
+#### XiaoJi 应用 (可选)
+- **镜像**: `ghcr.io/ghostangel-code/xiaoji:latest`
+- **用途**: 完整应用容器化部署
+- **端口**: 8080
+- **包含**: FFmpeg、Python、语音模型
+
+## Docker 使用
+
+### 启动 Chroma
+
+```bash
+cd docker/chroma
+docker-compose up -d
+```
+
+### 构建 XiaoJi 镜像
+
+```bash
+cd docker/xiaoji
+docker build -t xiaoji:latest .
+```
+
+### 运行 XiaoJi
+
+```bash
+docker run -d \
+  --name xiaoji \
+  -p 8080:8080 \
+  -v $(pwd)/data:/data \
+  -e XIAOJI_DATA_DIR=/data \
+  xiaoji:latest
+```
+
 ## 原始来源
 
 - **FFmpeg**: https://ffmpeg.org/
@@ -94,6 +138,8 @@ xiao-ji-resources/
 
 - **VITS**: https://huggingface.co/csukuangfj/sherpa-onnx-vits-zh-ll
 
+- **Chroma**: https://github.com/chroma-core/chroma
+
 ## 许可证
 
 各资源遵循其原始项目的许可证：
@@ -101,6 +147,7 @@ xiao-ji-resources/
 - Python: PSF License
 - Sherpa-ONNX: Apache 2.0
 - SenseVoice: 原始项目许可证
+- Chroma: Apache 2.0
 
 详见 [docs/LICENSES.md](docs/LICENSES.md)
 
@@ -113,3 +160,4 @@ xiao-ji-resources/
 ## 更新记录
 
 - 2026-02-08: 初始创建，整理所有资源清单
+- 2026-02-08: 添加 Docker 配置（Chroma、XiaoJi Dockerfile）

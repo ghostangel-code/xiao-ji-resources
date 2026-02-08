@@ -1,0 +1,105 @@
+name: Mirror Resources
+
+on:
+  workflow_dispatch:  # 手动触发
+  schedule:
+    - cron: '0 0 * * 0'  # 每周日自动检查更新
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install requests tqdm
+
+      - name: Download FFmpeg
+        run: |
+          mkdir -p ffmpeg/macos ffmpeg/linux ffmpeg/windows
+          
+          # macOS FFmpeg
+          curl -L -o ffmpeg/macos/ffmpeg.zip "https://evermeet.cx/ffmpeg/getrelease/ffmpeg/zip"
+          
+          # Linux AMD64 FFmpeg
+          curl -L -o ffmpeg/linux/ffmpeg.tar.xz "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
+          
+          # Linux ARM64 FFmpeg
+          curl -L -o ffmpeg/linux/ffmpeg-arm64.tar.xz "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-arm64-static.tar.xz"
+          
+          # Windows FFmpeg
+          curl -L -o ffmpeg/windows/ffmpeg.zip "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
+
+      - name: Download Models
+        run: |
+          mkdir -p models/stt models/tts models/vad models/kws models/speaker
+          
+          # SenseVoice STT Model
+          curl -L -o models/stt/model.onnx "https://modelscope.cn/models/poloniumrock/SenseVoiceSmallOnnx/resolve/master/model.int8.onnx"
+          curl -L -o models/stt/configuration.json "https://modelscope.cn/models/poloniumrock/SenseVoiceSmallOnnx/resolve/master/configuration.json"
+          curl -L -o models/stt/tokens.txt "https://modelscope.cn/models/poloniumrock/SenseVoiceSmallOnnx/resolve/master/tokens.txt"
+          
+          # VITS TTS Model
+          curl -L -o models/tts/model.onnx "https://huggingface.co/csukuangfj/sherpa-onnx-vits-zh-ll/resolve/main/model.onnx"
+          curl -L -o models/tts/lexicon.txt "https://huggingface.co/csukuangfj/sherpa-onnx-vits-zh-ll/resolve/main/lexicon.txt"
+          curl -L -o models/tts/tokens.txt "https://huggingface.co/csukuangfj/sherpa-onnx-vits-zh-ll/resolve/main/tokens.txt"
+          
+          # VAD Model
+          curl -L -o models/vad/silero_vad.onnx "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/silero_vad.onnx"
+          
+          # KWS Model
+          curl -L -o models/kws/model.tar.bz2 "https://github.com/k2-fsa/sherpa-onnx/releases/download/kws-models/sherpa-onnx-kws-zipformer-wenetspeech-3.3M-2024-01-01.tar.bz2"
+          
+          # Speaker Recognition Model
+          curl -L -o models/speaker/model.onnx "https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-recongition-models/3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx"
+
+      - name: Download Python Embedded
+        run: |
+          mkdir -p python/macos-arm64 python/macos-x64 python/linux-arm64 python/linux-x64 python/windows-x64
+          
+          VERSION="3.10.13"
+          DATE="20240107"
+          
+          # macOS ARM64
+          curl -L -o python/macos-arm64/python.tar.gz "https://github.com/indygreg/python-build-standalone/releases/download/${DATE}/cpython-${VERSION}+${DATE}-aarch64-apple-darwin-install_only.tar.gz"
+          
+          # macOS x64
+          curl -L -o python/macos-x64/python.tar.gz "https://github.com/indygreg/python-build-standalone/releases/download/${DATE}/cpython-${VERSION}+${DATE}-x86_64-apple-darwin-install_only.tar.gz"
+          
+          # Linux ARM64
+          curl -L -o python/linux-arm64/python.tar.gz "https://github.com/indygreg/python-build-standalone/releases/download/${DATE}/cpython-${VERSION}+${DATE}-aarch64-unknown-linux-gnu-install_only.tar.gz"
+          
+          # Linux x64
+          curl -L -o python/linux-x64/python.tar.gz "https://github.com/indygreg/python-build-standalone/releases/download/${DATE}/cpython-${VERSION}+${DATE}-x86_64-unknown-linux-gnu-install_only.tar.gz"
+          
+          # Windows x64
+          curl -L -o python/windows-x64/python.tar.gz "https://github.com/indygreg/python-build-standalone/releases/download/${DATE}/cpython-${VERSION}+${DATE}-x86_64-pc-windows-msvc-install_only.tar.gz"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v$(date +%Y%m%d)
+          name: Resources Mirror $(date +%Y-%m-%d)
+          body: |
+            自动镜像的资源文件
+            
+            ## 包含资源
+            - FFmpeg (macOS, Linux, Windows)
+            - 语音模型 (STT, TTS, VAD, KWS, Speaker)
+            - 嵌入式 Python 环境
+            
+            ## 原始来源
+            详见 [SOURCES.md](SOURCES.md)
+          files: |
+            ffmpeg/**/*
+            models/**/*
+            python/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
